@@ -50,6 +50,27 @@ Route::post('/tasks', function(Request $request){
     
 })->name('tasks.store');
 
+Route::get('/tasks/{id}/edit', function($id){
+    return view('edit', ['task'=>Task::findOrFail($id)]);
+})->name('tasks.edit');
+
+Route::put('tasks/{id}/edit', function($id, Request $request){
+
+    $data = $request->validate([
+        'title'=>'required|max:255',
+        'description'=>'required',
+        'long_description'=>'required'
+    ]);
+
+    $task = Task::findOrFail($id);
+    $task->title = $data['title'];
+    $task->description = $data['description'];
+    $task->long_description = $data['long_description'];
+    $task->save();
+
+    return redirect()->route('tasks.show', ['id'=> $task->id])->with('success', 'Task has been updated successfully.');
+})->name('tasks.update');
+
 
 Route::fallback(function(){
     return 'Page not found';
