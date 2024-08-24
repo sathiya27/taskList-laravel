@@ -64,6 +64,12 @@ Route::put('tasks/{task}/edit', function(Task $task, TaskRequest $request){
 })->name('tasks.update');
 
 
+route::delete('/tasks/{task}', function(Task $task){
+    $task->delete();
+    return redirect()->route('tasks.index')->with('success', 'Task has been deleted successfully.');
+})->name('tasks.destroy');
+
+
 Route::fallback(function(){
     return 'Page not found';
 });
