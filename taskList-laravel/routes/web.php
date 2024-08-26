@@ -22,7 +22,7 @@ Route::get('/', function(){
 });
 
 Route::get('/tasks', function () {
-    return view('index', ['tasks'=> Task::latest()->get()]);
+    return view('index', ['tasks'=> Task::latest()->paginate(10)]);
 })->name('tasks.index');
 
 Route::view('/tasks/create', 'create')->name('tasks.create');
@@ -62,6 +62,12 @@ Route::put('tasks/{task}/edit', function(Task $task, TaskRequest $request){
 
     return redirect()->route('tasks.show', ['task'=> $task->id])->with('success', 'Task has been updated successfully.');
 })->name('tasks.update');
+
+Route::put('/tasks/{task}/toggle-completed', function (Task $task){
+    $task->toggleCompleted();
+
+    return redirect()->back()->with('success', 'Task has been updated');
+})->name('tasks.toggle-completed');
 
 
 route::delete('/tasks/{task}', function(Task $task){
